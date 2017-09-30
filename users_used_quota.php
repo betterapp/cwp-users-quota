@@ -158,7 +158,7 @@ $quota = $cwpUsersQuota->calculate();
 
 <div id="tablecontainer">
     <?php
-    $sql = "SELECT u.*, p.package_name, p.disk_quota FROM user u, packages p WHERE p.id = u.package";
+    $sql = "SELECT u.*, p.package_name, p.disk_quota FROM user u, packages p WHERE p.id = u.package ORDER by u.id ASC";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $meta = $stmt->result_metadata();
