@@ -198,7 +198,7 @@ $quota = $cwpUsersQuota->calculate();
                 <td><?php echo($result[$i]['id']) ?></td>
                 <td><?php echo $userName ?></td>
                 <td><?php echo($result[$i]['package_name']) ?></td>
-                <td><?php echo($result[$i]['disk_quota'] / 1024) ?> GB</td>
+				<td><?php echo round($result[$i]['disk_quota'] / 1024, 2) ?> GB</td>
                 <td>
                     <?php
                     echo round($quota['home'][$userName] / 1024 / 1024 / 1024, 2);
