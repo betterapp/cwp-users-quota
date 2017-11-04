@@ -41,7 +41,7 @@ class CwpUsersUsedQuota
                 $userQuotaInfo = explode('/', trim($homeQuotaInfo), 2);
                 $userName = trim(str_replace('home/', '', $userQuotaInfo[1]));
                 $userQuota = trim($userQuotaInfo[0]);
-                $quota[$userName] = $userQuota;
+                $quota[$userName] = (int) $userQuota;
             }
         }
         return $quota;
@@ -65,15 +65,15 @@ class CwpUsersUsedQuota
                 };
                 if (isset($quota[$userName])) {
                     if (isset($dbName)) {
-                        $quota[$userName]['db'][$dbName] = $fileQuota;
+                        $quota[$userName]['db'][$dbName] = (int) $fileQuota;
                     }
-                    $quota[$userName]['db_quota'] =+ $fileQuota;
+                    $quota[$userName]['db_quota'] += (int) $fileQuota;
                     $quota[$userName]['db_count']++;
                 } else {
                     if (isset($dbName)) {
-                        $quota[$userName]['db'][$dbName] = $fileQuota;
+                        $quota[$userName]['db'][$dbName] = (int) $fileQuota;
                     }
-                    $quota[$userName]['db_quota'] = $fileQuota;
+                    $quota[$userName]['db_quota'] = (int) $fileQuota;
                     $quota[$userName]['db_count'] = 1;
                 }
                 unset($dbName);
@@ -94,7 +94,7 @@ class CwpUsersUsedQuota
                 $domainQuotaInfo = explode('/', trim($emailQuotaInfo), 2);
                 $domainName = trim(str_replace('var/vmail/', '', $domainQuotaInfo[1]));
                 $emailQuota = trim($domainQuotaInfo[0]);
-                $quota[$domainName] = $emailQuota;
+                $quota[$domainName] = (int) $emailQuota;
             }
         }
 
@@ -140,9 +140,9 @@ class CwpUsersUsedQuota
         foreach($emailQuota as $domain => $quota) {
             $user = $usersDomains['domain'][$domain];
             if (isset($data[$user])) {
-                $data[$user] =+ $quota;
+                $data[$user] += (int) $quota;
             } else {
-                $data[$user] = $quota;
+                $data[$user] = (int) $quota;
             }
         }
 
