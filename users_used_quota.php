@@ -266,10 +266,14 @@ $quota = $cwpUsersQuota->calculate();
                     <?php
 
                     $packageMaxQuotaBytes = $result[$i]['disk_quota'] * 1024 * 1024;
-                    $usedQuotaPercent = round($allQuota * 100 / $packageMaxQuotaBytes, 2);
-                    $usedQuotaProgress = round($allQuota * 100 / $packageMaxQuotaBytes, 0);
-
-                    echo "[$usedQuotaPercent %]";
+                    if ($packageMaxQuotaBytes == "0") {
+                        $usedQuotaProgress = 0;
+                        echo "[Unlimited]";
+                    } else {
+                        $usedQuotaPercent = round($allQuota * 100 / $packageMaxQuotaBytes, 2);
+                        $usedQuotaProgress = round($allQuota * 100 / $packageMaxQuotaBytes, 0);
+                    	echo "[$usedQuotaPercent %]";
+                    }
 
                     $progressBarClass = 'progressBarGreen';
                     if ($usedQuotaProgress > 50) {
