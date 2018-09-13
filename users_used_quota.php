@@ -105,24 +105,24 @@ class CwpUsersUsedQuota
     {
 
         $sql = "
-                SELECT
-                        cu.username,
-                        cu.domain
-                FROM
-                        root_cwp.user cu
-                UNION ALL
-                SELECT
-                        cd.user,
-                        cd.domain
-                FROM
-                        root_cwp.domains cd
-                UNION ALL
-                SELECT
-                        cs.user,
-                        CONCAT(cs.subdomain, '.', cs.domain)
-                FROM
-                        root_cwp.subdomains cs
-                ";
+		SELECT
+			cu.username,
+			cu.domain
+		FROM
+			root_cwp.user cu
+		UNION ALL
+		SELECT
+			cd.user,
+			cd.domain
+		FROM
+			root_cwp.domains cd
+		UNION ALL
+		SELECT
+			cs.user,
+			CONCAT(cs.subdomain, '.', cs.domain)
+		FROM
+			root_cwp.subdomains cs
+		";
 
         $result = $this->conn->query($sql);
         $usersDomains = [];
@@ -176,191 +176,191 @@ $quota = $cwpUsersQuota->calculate();
     }
     $stmt->close();
     ?>
-        <table border=1 id="dbtable">
-                <tr>
-                        <th class="center">LP.</th>
-                        <th class="center">User Name</th>
-                        <th class="center">Domain</th>
-                        <th class="center">Package name</th>
-                        <th class="center">Package quota</th>
-                        <th class="center">Home dir quota</th>
-                        <th class="center">MySql quota</th>
-                        <th class="center">Mail quota</th>
-                        <th class="center">Used quota</th>
-                        <th class="center">Free quota</th>
-                        <th class="center">Percent</th>
-                </tr>
-        <?php
-        $allAccounts = count($result);
-        $sum['home'] = 0;
-        $sum['email'] = 0;
-        $sum['mysql']['count'] = 0;
-        $sum['mysql']['quota'] = 0;
-        $sum['all'] = 0;
-        $sum['free'] = 0;
-        for ($i = 0; $i <= $allAccounts - 1; $i++) :
-            $userName = $result[$i]['username'];
-            $dominio = $result[$i]['domain'];
-            ?>
-                        <tr>
-                                <td class="right"><?php echo $i+1 ?>.</td>
-                                <td class="left"><?php echo $userName ?></td>
-                                <td class="left"><?php echo $dominio ?></td>
-                                <td class="left"><?php echo($result[$i]['package_name']) ?></td>
-                                <td class="right"><?php echo round($result[$i]['disk_quota'] / 1024, 2) ?> GB</td>
-                                <td class="right">
-                    <?php
-                    $sum['home'] += $quota['home'][$userName];
-                    echo round($quota['home'][$userName] / 1024 / 1024 / 1024, 2);
-                    ?> GB
-                                </td>
-                                <td class="right">
-                    <?php
-                    if (isset($quota['mysql'][$userName])) {
-                        $sum['mysql']['count'] += $quota['mysql'][$userName]['db_count'];
-                        $sum['mysql']['quota'] += $quota['mysql'][$userName]['db_quota'];
-                        echo round($quota['mysql'][$userName]['db_quota'] / 1024 / 1024 / 1024, 2);
-                        echo ' GB ';
-                        echo "[{$quota['mysql'][$userName]['db_count']}]";
-                    } else {
-                        echo 0 . ' GB';
-                    }
-                    ?>
-                                </td>
-                                <td class="right">
-                    <?php
-                    if (isset($quota['email'][$userName])) {
-                        $sum['email'] += $quota['email'][$userName];
-                        echo round($quota['email'][$userName] / 1024 / 1024 / 1024, 2);
-                        echo ' GB ';
-                    } else {
-                        echo 0 . ' GB';
-                    }
-                    ?>
-                                </td>
-                                <td class="right">
-                    <?php
-                    $homeQuota = 0;
-                    if (isset($quota['home'][$userName])) {
-                        $homeQuota = $quota['home'][$userName];
-                    }
+	<table border=1 id="dbtable">
+		<tr>
+			<th class="center">LP.</th>
+			<th class="center">User Name</th>
+			<th class="center">Domain</th>
+			<th class="center">Package name</th>
+			<th class="center">Package quota</th>
+			<th class="center">Home dir quota</th>
+			<th class="center">MySql quota</th>
+			<th class="center">Mail quota</th>
+			<th class="center">Used quota</th>
+			<th class="center">Free quota</th>
+			<th class="center">Percent</th>
+		</tr>
+	<?php
+	$allAccounts = count($result);
+	$sum['home'] = 0;
+	$sum['email'] = 0;
+	$sum['mysql']['count'] = 0;
+	$sum['mysql']['quota'] = 0;
+	$sum['all'] = 0;
+	$sum['free'] = 0;
+	for ($i = 0; $i <= $allAccounts - 1; $i++) :
+		$userName = $result[$i]['username'];
+		$domain = $result[$i]['domain'];
+	?>
+		<tr>
+			<td class="right"><?php echo $i+1 ?>.</td>
+			<td class="left"><?php echo $userName ?></td>
+			<td class="left"><?php echo $domain ?></td>
+			<td class="left"><?php echo($result[$i]['package_name']) ?></td>
+			<td class="right"><?php echo round($result[$i]['disk_quota'] / 1024, 2) ?> GB</td>
+			<td class="right">
+				<?php
+				$sum['home'] += $quota['home'][$userName];
+				echo round($quota['home'][$userName] / 1024 / 1024 / 1024, 2);
+				?> GB
+			</td>
+			<td class="right">
+				<?php
+				if (isset($quota['mysql'][$userName])) {
+					$sum['mysql']['count'] += $quota['mysql'][$userName]['db_count'];
+					$sum['mysql']['quota'] += $quota['mysql'][$userName]['db_quota'];
+					echo round($quota['mysql'][$userName]['db_quota'] / 1024 / 1024 / 1024, 2);
+					echo ' GB ';
+					echo "[{$quota['mysql'][$userName]['db_count']}]";
+				} else {
+					echo 0 . ' GB';
+				}
+				?>
+			</td>
+			<td class="right">
+				<?php
+				if (isset($quota['email'][$userName])) {
+					$sum['email'] += $quota['email'][$userName];
+					echo round($quota['email'][$userName] / 1024 / 1024 / 1024, 2);
+					echo ' GB ';
+				} else {
+					echo 0 . ' GB';
+				}
+				?>
+			</td>
+			<td class="right">
+				<?php
+				$homeQuota = 0;
+				if (isset($quota['home'][$userName])) {
+					$homeQuota = $quota['home'][$userName];
+				}
 
-                    $mysqlQuota = 0;
-                    if (isset($quota['mysql'][$userName])) {
-                        $mysqlQuota = $quota['mysql'][$userName]['db_quota'];
-                    }
+				$mysqlQuota = 0;
+				if (isset($quota['mysql'][$userName])) {
+					$mysqlQuota = $quota['mysql'][$userName]['db_quota'];
+				}
 
-                    $emailQuota = 0;
-                    if (isset($quota['email'][$userName])) {
-                        $emailQuota = $quota['email'][$userName];
-                    }
+				$emailQuota = 0;
+				if (isset($quota['email'][$userName])) {
+					$emailQuota = $quota['email'][$userName];
+				}
 
-                    $allQuota = $homeQuota + $mysqlQuota + $emailQuota;
-                    $sum['all'] += $allQuota;
+				$allQuota = $homeQuota + $mysqlQuota + $emailQuota;
+				$sum['all'] += $allQuota;
 
-                    echo round($allQuota / 1024 / 1024 / 1024, 2);
-                    echo ' GB ';
+				echo round($allQuota / 1024 / 1024 / 1024, 2);
+				echo ' GB ';
 
-                    ?>
-                                </td>
-                                <td class="right">
-                    <?php
+				?>
+			</td>
+			<td class="right">
+				<?php
 
-                    $packageMaxQuotaBytes = $result[$i]['disk_quota'] * 1024 * 1024;
-                    $freeQuota = $packageMaxQuotaBytes - $allQuota;
-                    $sum['free'] += $freeQuota;
+				$packageMaxQuotaBytes = $result[$i]['disk_quota'] * 1024 * 1024;
+				$freeQuota = $packageMaxQuotaBytes - $allQuota;
+				$sum['free'] += $freeQuota;
 
-                    echo round($freeQuota / 1024 / 1024 / 1024, 2);
-                    echo ' GB ';
+				echo round($freeQuota / 1024 / 1024 / 1024, 2);
+				echo ' GB ';
 
-                    ?>
-                                </td>
-                                <td>
-                    <?php
+				?>
+			</td>
+			<td>
+				<?php
 
-                    $packageMaxQuotaBytes = $result[$i]['disk_quota'] * 1024 * 1024;
-                    if ($packageMaxQuotaBytes == "0") {
-                        $usedQuotaProgress = 0;
-                        echo "[Unlimited]";
-                    } else {
-                        $usedQuotaPercent = round($allQuota * 100 / $packageMaxQuotaBytes, 2);
-                        $usedQuotaProgress = round($allQuota * 100 / $packageMaxQuotaBytes, 0);
-                        echo "[$usedQuotaPercent %]";
-                    }
+				$packageMaxQuotaBytes = $result[$i]['disk_quota'] * 1024 * 1024;
+				if ($packageMaxQuotaBytes == "0") {
+					$usedQuotaProgress = 0;
+					echo "[Unlimited]";
+				} else {
+					$usedQuotaPercent = round($allQuota * 100 / $packageMaxQuotaBytes, 2);
+					$usedQuotaProgress = round($allQuota * 100 / $packageMaxQuotaBytes, 0);
+					echo "[$usedQuotaPercent %]";
+				}
 
-                    $progressBarClass = 'progressBarGreen';
-                    if ($usedQuotaProgress > 50) {
-                        $progressBarClass = 'progressBarOrange';
-                    }
-                    if ($usedQuotaProgress > 90) {
-                        $progressBarClass = 'progressBarRed';
-                    }
-                    if ($usedQuotaProgress > 100) {
-                        $usedQuotaProgress = 100;
-                    }
-                    ?>
-                                        <div class="progressBox">
-                                                <div class='<?=$progressBarClass;?>' style="width:<?=$usedQuotaProgress;?>px;"></div>
-                                        </div>
-                                </td>
-                        </tr>
-        <?php endfor; ?>
-                <thead>
-                <tr>
-                        <td colspan="2" class="left">Total users: <?=$allAccounts;?></td>
-                        <td colspan="3" class="right">Sum:</td>
-                        <td class="right">
-                <?php echo round($sum['home'] / 1024 / 1024 / 1024, 2); ?> GB
-                        </td>
-                        <td class="right">
-                <?php echo round($sum['mysql']['quota'] / 1024 / 1024 / 1024, 2); ?> GB
-                                [<?php echo $sum['mysql']['count']; ?>]
-                        </td>
-                        <td class="right">
-                <?php echo round($sum['email'] / 1024 / 1024 / 1024, 2); ?> GB
-                        </td>
-                        <td class="right">
-                <?php echo round($sum['all'] / 1024 / 1024 / 1024, 2); ?> GB
-                        </td>
-                        <td class="right">
-                <?php echo round($sum['free'] / 1024 / 1024 / 1024, 2); ?> GB
-                        </td>
-                        <td></td>
-                </tr>
-                </thead>
-        </table>
+				$progressBarClass = 'progressBarGreen';
+				if ($usedQuotaProgress > 50) {
+					$progressBarClass = 'progressBarOrange';
+				}
+				if ($usedQuotaProgress > 90) {
+					$progressBarClass = 'progressBarRed';
+				}
+				if ($usedQuotaProgress > 100) {
+					$usedQuotaProgress = 100;
+				}
+				?>
+				<div class="progressBox">
+						<div class='<?=$progressBarClass;?>' style="width:<?=$usedQuotaProgress;?>px;"></div>
+				</div>
+			</td>
+		</tr>
+	<?php endfor; ?>
+		<thead>
+		<tr>
+			<td colspan="2" class="left">Total users: <?=$allAccounts;?></td>
+			<td colspan="3" class="right">Sum:</td>
+			<td class="right">
+				<?php echo round($sum['home'] / 1024 / 1024 / 1024, 2); ?> GB
+			</td>
+			<td class="right">
+				<?php echo round($sum['mysql']['quota'] / 1024 / 1024 / 1024, 2); ?> GB
+						[<?php echo $sum['mysql']['count']; ?>]
+			</td>
+			<td class="right">
+				<?php echo round($sum['email'] / 1024 / 1024 / 1024, 2); ?> GB
+			</td>
+			<td class="right">
+				<?php echo round($sum['all'] / 1024 / 1024 / 1024, 2); ?> GB
+			</td>
+			<td class="right">
+				<?php echo round($sum['free'] / 1024 / 1024 / 1024, 2); ?> GB
+			</td>
+			<td></td>
+		</tr>
+		</thead>
+	</table>
 </div>
 
 <style type="text/css">
-        #dbtable {
-                width: 100%;
-                margin-bottom: 20px;
-        }
+	#dbtable {
+		width: 100%;
+		margin-bottom: 20px;
+	}
 
-        #dbtable td, #dbtable th {
-                padding: 6px;
-        }
-        .center {
-                text-align: center;
-        }
-        .right {
-                text-align: right;
-        }
-        .progressBox {
-                width: 100px;
-                height: 10px;
-                border: 1px solid;
-        }
-        .progressBarGreen {
-                height: 8px;
-                background-color: green;
-        }
-        .progressBarOrange {
-                height: 8px;
-                background-color: orange;
-        }
-        .progressBarRed {
-                height: 8px;
-                background-color: red;
-        }
+	#dbtable td, #dbtable th {
+		padding: 6px;
+	}
+	.center {
+		text-align: center;
+	}
+	.right {
+		text-align: right;
+	}
+	.progressBox {
+		width: 100px;
+		height: 10px;
+		border: 1px solid;
+	}
+	.progressBarGreen {
+		height: 8px;
+		background-color: green;
+	}
+	.progressBarOrange {
+		height: 8px;
+		background-color: orange;
+	}
+	.progressBarRed {
+		height: 8px;
+		background-color: red;
+	}
 </style>
