@@ -300,7 +300,7 @@ $quota = $cwpUsersQuota->calculate();
 				}
 				?>
 				<div class="progressBox">
-						<div class='<?=$progressBarClass;?>' style="width:<?=$usedQuotaProgress;?>px;"></div>
+					<div class='<?=$progressBarClass;?>' style="width:<?=$usedQuotaProgress;?>px;"></div>
 				</div>
 			</td>
 		</tr>
